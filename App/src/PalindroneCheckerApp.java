@@ -1,33 +1,33 @@
-import java.util.Scanner;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
-public class UseCase5PalindromeCheckerApp {
+public class UseCase6PalindromeCheckerApp {
 
     public static void main(String[] args) {
-        System.out.println("Welcome to palindrome checker app management");
-        Scanner scanner = new Scanner(System.in);
+        // Define the input string to validate
+        String input = "civic";
 
-        System.out.print("Enter a string: ");
-        // Declare and initialize the input string
-        String input = scanner.nextLine();
+        // Create a Queue to store characters in FIFO order
+        Queue<Character> queue = new LinkedList<>();
 
-        // Create a Stack to store characters
+        // Create a Stack to store characters in LIFO order
         Stack<Character> stack = new Stack<>();
 
-        // Push each character of the string into the stack
-        // Stack naturally reverses the order
+        // Insert each character into both queue and stack
         for (char c : input.toCharArray()) {
+            queue.add(c);
             stack.push(c);
         }
 
-        // Assume palindrome initially
+        // Flag to track palindrome status
         boolean isPalindrome = true;
 
 
-        // Iterate again through original string and compare with popped values
-        for (char c : input.toCharArray()) {
-            // Pop operation removes characters in reverse order
-            if (c != stack.pop()) {
+        // Compare characters until the queue becomes empty
+        while (!queue.isEmpty()) {
+            // dequeue() retrieves from front, pop() retrieves from top (end)
+            if (!queue.poll().equals(stack.pop())) {
                 isPalindrome = false;
                 break;
             }
@@ -36,7 +36,5 @@ public class UseCase5PalindromeCheckerApp {
         // Display the result
         System.out.println("Input : " + input);
         System.out.println("Is Palindrome? : " + isPalindrome);
-
-        scanner.close();
     }
 }
