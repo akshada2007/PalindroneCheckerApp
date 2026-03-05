@@ -2,82 +2,72 @@ import java.util.*;
 
 /**
  * ============================================================================
- * MAIN CLASS - UseCase12PalindromeCheckerApp
+ * MAIN CLASS - UseCase13PalindromeCheckerApp
  * ============================================================================
- * * Use Case 12: Strategy Pattern for Palindrome Algorithms
+ * * Use Case 13: Performance Comparison
  * * Description:
- * This class implements the Strategy Design Pattern, allowing the
- * selection of different palindrome algorithms dynamically.
+ * This class compares the execution time of different palindrome
+ * detection algorithms: Iterative (Array), Deque, and Recursive.
  * * Key Concepts:
- * - Interface: Defines a common contract for all strategies.
- * - Polymorphism: Allows different implementations to be used interchangeably.
- * - Strategy Pattern: Encapsulates algorithms and makes them swappable.
+ * - System.nanoTime(): Captures high-resolution time for benchmarking.
+ * - Algorithm Comparison: Analyzes efficiency across different approaches.
  * * @author Developer
- * @version 12.0
+ * @version 13.0
  */
+public class UseCase13PalindromeCheckerApp {
 
-// 1. Define the Strategy Interface
-interface PalindromeStrategy {
-    boolean check(String input);
-}
+    public static void main(String[] args) {
+        String input = "topspot"; // Sample palindrome for testing
 
-// 2. Implement Stack-Based Strategy
-class StackStrategy implements PalindromeStrategy {
-    @Override
-    public boolean check(String input) {
-        Stack<Character> stack = new Stack<>();
-        for (char c : input.toCharArray()) {
-            stack.push(c);
-        }
-        StringBuilder reversed = new StringBuilder();
-        while (!stack.isEmpty()) {
-            reversed.append(stack.pop());
-        }
-        return input.equalsIgnoreCase(reversed.toString());
+        System.out.println("--- Palindrome Performance Comparison ---");
+        System.out.println("Input: " + input + "\n");
+
+        // 1. Measure Iterative Approach (Array/Two-Pointer)
+        long startIterative = System.nanoTime();
+        boolean res1 = isPalindromeIterative(input);
+        long endIterative = System.nanoTime();
+        displayResult("Iterative (Array)", res1, endIterative - startIterative);
+
+        // 2. Measure Deque Approach
+        long startDeque = System.nanoTime();
+        boolean res2 = isPalindromeDeque(input);
+        long endDeque = System.nanoTime();
+        displayResult("Deque (ArrayDeque)", res2, endDeque - startDeque);
+
+        // 3. Measure Recursive Approach
+        long startRecursive = System.nanoTime();
+        boolean res3 = isPalindromeRecursive(input);
+        long endRecursive = System.nanoTime();
+        displayResult("Recursive (Stack)", res3, endRecursive - startRecursive);
     }
-}
 
-// 3. Implement Deque-Based Strategy
-class DequeStrategy implements PalindromeStrategy {
-    @Override
-    public boolean check(String input) {
-        Deque<Character> deque = new ArrayDeque<>();
-        for (char c : input.toLowerCase().toCharArray()) {
-            deque.addLast(c);
-        }
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                return false;
-            }
+    private static void displayResult(String method, boolean result, long time) {
+        System.out.printf("%-20s | Result: %-5b | Time: %d ns\n", method, result, time);
+    }
+
+    // Iterative Logic
+    public static boolean isPalindromeIterative(String str) {
+        int left = 0, right = str.length() - 1;
+        while (left < right) {
+            if (str.charAt(left++) != str.charAt(right--)) return false;
         }
         return true;
     }
-}
 
-// 4. Context Class to use the Strategy
-class PalindromeContext {
-    private PalindromeStrategy strategy;
-
-    public void setStrategy(PalindromeStrategy strategy) {
-        this.strategy = strategy;
+    // Deque Logic
+    public static boolean isPalindromeDeque(String str) {
+        Deque<Character> deque = new ArrayDeque<>();
+        for (char c : str.toCharArray()) deque.addLast(c);
+        while (deque.size() > 1) {
+            if (deque.removeFirst() != deque.removeLast()) return false;
+        }
+        return true;
     }
 
-    public boolean executeStrategy(String input) {
-        return strategy.check(input);
-    }
-}
-
-public class UseCase12PalindromeCheckerApp {
-    public static void main(String[] args) {
-        String text = "radar";
-        PalindromeContext context = new PalindromeContext();
-
-        // Dynamically inject Stack Strategy
-        context.setStrategy(new StackStrategy());
-        System.out.println("Using Stack Strategy: " + context.executeStrategy(text));
-
-        // Dynamically inject Deque Strategy
-        context.setStrategy(new DequeStrategy());
-        System.out.println("Using Deque Strategy: " + context.executeStrategy(text));
+    // Recursive Logic
+    public static boolean isPalindromeRecursive(String str) {
+        if (str.length() <= 1) return true;
+        if (str.charAt(0) != str.charAt(str.length() - 1)) return false;
+        return isPalindromeRecursive(str.substring(1, str.length() - 1));
     }
 }
