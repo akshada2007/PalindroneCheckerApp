@@ -1,29 +1,8 @@
-/**
- * ============================================================================
- * MAIN CLASS - UseCase4PalindromeCheckerApp
- * ============================================================================
- * * Use Case 4: Character Array Based Validation
- * * Description:
- * This class validates a palindrome by converting
- * the string into a character array and comparing
- * characters using the two-pointer technique.
- * * At this stage, the application:
- * - Converts string to char array
- * - Uses start and end pointers
- * - Compares characters efficiently
- * - Displays the result
- * * This reduces extra memory usage.
- * * @author Developer
- * @version 4.0
- */
 import java.util.Scanner;
+import java.util.Stack;
 
-public class UseCase4PalindromeCheckerApp {
+public class UseCase5PalindromeCheckerApp {
 
-    /**
-     * Application entry point for UC4.
-     * * @param args Command-line arguments
-     */
     public static void main(String[] args) {
         System.out.println("Welcome to palindrome checker app management");
         Scanner scanner = new Scanner(System.in);
@@ -32,40 +11,31 @@ public class UseCase4PalindromeCheckerApp {
         // Declare and initialize the input string
         String input = scanner.nextLine();
 
-        // Convert the string into a character array
-        char[] chars = input.toCharArray();
+        // Create a Stack to store characters
+        Stack<Character> stack = new Stack<>();
 
-        // Initialize pointer at the beginning
-        int start = 0;
-
-        // Initialize pointer at the end
-        int end = chars.length - 1;
+        // Push each character of the string into the stack
+        // Stack naturally reverses the order
+        for (char c : input.toCharArray()) {
+            stack.push(c);
+        }
 
         // Assume palindrome initially
         boolean isPalindrome = true;
 
 
-        // Continue comparison until pointers cross
-        while (start < end) {
-            // Compare characters at the current pointers
-            if (chars[start] != chars[end]) {
+        // Iterate again through original string and compare with popped values
+        for (char c : input.toCharArray()) {
+            // Pop operation removes characters in reverse order
+            if (c != stack.pop()) {
                 isPalindrome = false;
-                break; // Exit loop early if mismatch found
+                break;
             }
-
-            // Move pointers towards the center
-            start++;
-            end--;
         }
 
         // Display the result
-        if (isPalindrome) {
-            System.out.println("Input : " + input);
-            System.out.println("Is Palindrome? : true");
-        } else {
-            System.out.println("Input : " + input);
-            System.out.println("Is Palindrome? : false");
-        }
+        System.out.println("Input : " + input);
+        System.out.println("Is Palindrome? : " + isPalindrome);
 
         scanner.close();
     }
